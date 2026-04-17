@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "332989634698",
     "project_id": "solutions-a0d47",
-    "storage_bucket": "solutions-a0d47.firebasestorage.app"
+    "storage_bucket": "xxxxx.firebasestorage.app"
   },
   "client": [
     {
@@ -14,13 +14,13 @@
       },
       "oauth_client": [
         {
-          "client_id": "332989634698-gd3idlpc0si3g4mt3ptb22n8t0885jrs.apps.googleusercontent.com",
+          "client_id": "xxxxxxxx.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBfEz8rNps6Qi3_uUAms5pN1dGplLCAIEc"
+          "current_key": "AIz-sdcsamksdfmdsmsfkdmsmf"
         }
       ],
       "services": {
