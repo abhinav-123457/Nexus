@@ -195,4 +195,6 @@ Remaining hardening (recommended):
 
 ## License
 
-Private project. Add an explicit license file if you plan to open-source this repository.
+This project is licensed under the Apache License 2.0.
+
+See [LICENSE](LICENSE) for details.
