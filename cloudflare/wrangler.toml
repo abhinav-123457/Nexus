@@ -1,0 +1,6 @@
+name = "nexus-staff-push"
+main = "staff-push-worker.js"
+compatibility_date = "2026-04-20"
+
+[vars]
+FCM_PROJECT_ID = "solutions-a0d47"

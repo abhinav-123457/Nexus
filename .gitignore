@@ -17,6 +17,29 @@ migrate_working_dir/
 *.ipr
 *.iws
 .idea/
+.env
+.env.*
+!.env.example
+
+# Secrets and credentials
+*.key
+*.pem
+*.p12
+*.p8
+*.jks
+*.keystore
+**/*firebase-adminsdk*.json
+**/*service-account*.json
+**/google-services.json
+**/GoogleService-Info.plist
+
+# Local Firebase and emulator artifacts
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+firestore-debug.log
+ui-debug.log
+*.local
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -43,3 +66,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+android/app/google-services.json

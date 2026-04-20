@@ -1,0 +1,110 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function authEmail() {
+      return request.auth.token.email.lower();
+    }
+
+    function isAdmin() {
+      return signedIn()
+        && authEmail() != null
+        && exists(/databases/$(database)/documents/adminEmails/$(authEmail()));
+    }
+
+    // Staff code must be readable before authentication during registration.
+    match /appConfig/staffAccess {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // External dispatch webhook config used by admin dispatch console.
+    match /appConfig/dispatchWebhook {
+      allow read, write: if isAdmin();
+    }
+
+    // Allow role lookup after sign-in while limiting creation to authenticated users.
+    match /staffEmails/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn()
+        && (
+          isAdmin()
+          || (authEmail() != null && id == authEmail())
+        )
+        && request.resource.data.keys().hasOnly(['email'])
+        && request.resource.data.email is string
+        && (
+          isAdmin()
+          || request.resource.data.email == authEmail()
+        );
+      allow update, delete: if isAdmin();
+    }
+
+    match /adminEmails/{id} {
+      allow read: if signedIn();
+      allow create: if isAdmin()
+        || (
+          signedIn()
+          && authEmail() == 'admin@nexus.demo'
+          && id == 'admin@nexus.demo'
+          && request.resource.data.email == 'admin@nexus.demo'
+        );
+      allow update, delete: if isAdmin();
+    }
+
+    // Incident core documents.
+    match /incidents/{incidentId} {
+      allow read, create, update: if signedIn();
+      allow delete: if false;
+
+      // Audit timeline for incident actions.
+      match /events/{eventId} {
+        allow read, create: if signedIn();
+        allow update, delete: if false;
+      }
+
+      // Delivery/ack timeline for assigned staff.
+      match /acks/{ackId} {
+        allow read, create, update: if signedIn();
+        allow delete: if false;
+      }
+    }
+
+    // Queue for manual/automated external dispatch processing.
+    match /dispatchQueue/{docId} {
+      allow create: if signedIn();
+      allow read, update: if isAdmin();
+      allow delete: if false;
+    }
+
+    // Retry queue for transient failures while preserving event intent.
+    match /retryQueue/{docId} {
+      allow create: if signedIn();
+      allow read, update: if isAdmin();
+      allow delete: if false;
+    }
+
+    match /staff/{staffId} {
+      allow read: if signedIn();
+      allow create: if signedIn();
+      allow update: if signedIn() && (
+        isAdmin() ||
+        (resource.data.email is string && resource.data.email == authEmail())
+      );
+      allow delete: if false;
+    }
+
+    match /guests/{guestId} {
+      allow read, create, update: if signedIn();
+      allow delete: if false;
+    }
+
+    // Keep strict default deny for unknown paths.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

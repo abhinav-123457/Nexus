@@ -1,0 +1,15 @@
+node_modules/
+*.local
+
+# Local Firebase/emulator artifacts
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# Service credentials should never be committed
+*.key
+*.pem
+*.p12
+*.p8
+*firebase-adminsdk*.json
+*service-account*.json
